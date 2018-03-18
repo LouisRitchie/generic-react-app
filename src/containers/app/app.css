@@ -1,0 +1,18 @@
+.container {
+  padding-left: 64px;
+  padding-right: 32px;
+  opacity: 0;
+  transition: opacity 0s;
+  margin-top: 55px;
+}
+
+.lightsOn {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+@media(max-width: 650px) {
+  .container {
+    padding: 0;
+  }
+}

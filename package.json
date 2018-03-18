@@ -1,0 +1,36 @@
+{
+  "name": "react-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node start.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^0.28.10",
+    "express": "^4.16.3",
+    "isomorphic-style-loader": "^4.0.0",
+    "json5-loader": "^1.0.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.1",
+    "react-transition-group": "^2.2.1",
+    "react-vertical-timeline-component": "^2.0.5",
+    "style-loader": "^0.20.3",
+    "svg-loader": "0.0.2",
+    "svg-react-loader": "^0.4.5",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.11"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.1.1"
+  }
+}
