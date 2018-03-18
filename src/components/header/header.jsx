@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import './header.css'
 import { Link } from 'react-router-dom'
 import routes from 'src/routes.js'
+import './styles.css'
 
 class Header extends Component {
   render() {

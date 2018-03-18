@@ -4,7 +4,7 @@ import Header from 'components/header'
 import Footer from 'components/footer'
 import routes from 'src/routes.js'
 import TransitionContainer from 'containers/transitionContainer'
-import './app.css'
+import './styles.css'
 
 class App extends Component {
   state = {

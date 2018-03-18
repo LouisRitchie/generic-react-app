@@ -3,7 +3,8 @@
   padding-right: 32px;
   opacity: 0;
   transition: opacity 0s;
-  margin-top: 55px;
+  margin-top: 75px;
+  min-height: calc(100vh - 115px);
 }
 
 .lightsOn {
