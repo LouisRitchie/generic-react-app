@@ -7,7 +7,8 @@ class Home extends Component {
     return (
       <div className="home">
         Home Container.
-        <SlidingPhoto image={require('../../static/leanpub.png')} />
+        {/*<SlidingPhoto index={0} image={require('../../static/leanpub.png')} />*/}
+        <SlidingPhoto index={1} image={require('../../static/reelgood2.png')} />
       </div>
     )
   }

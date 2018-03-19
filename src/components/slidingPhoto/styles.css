@@ -1,5 +1,5 @@
 .photo {
   position: absolute;
-  transition: top 1s, opacity 1s;
-  height: 200px;
+  // transition: top 1s, opacity 1s;
+  height: 500px;
 }
