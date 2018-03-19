@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { scroll$ } from 'lib/observables.js'
-import Rx from 'rxjs'
+import { interval } from 'rxjs/observable/interval'
+import 'rxjs/add/operator/sample'
+import 'rxjs/add/operator/bufferTime'
+import 'rxjs/add/operator/filter'
 import './styles.css'
+
 import Photo from 'static/leanpub.png'
 
 const lowerLimit = 100
@@ -19,7 +23,8 @@ class SlidingPhoto extends Component {
   }
 
   componentWillMount() {
-    const positionInterval$ = Rx.Observable.interval(20)
+    const positionInterval$ = interval(20)
+
     scroll$.sample(positionInterval$).bufferTime(200).filter(arr => arr.length > 6).subscribe(scrolls => {
       const avg = scrolls.reduce((sum, {pageY}) => sum + pageY, 0) / scrolls.length + document.documentElement.clientHeight
       const coefficient = this._getCoefficient(avg)
