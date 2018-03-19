@@ -35,6 +35,12 @@ function startExpress(port) {
 		res.sendFile(path.join(DIST_DIR, "bundle.js"))
 	})
 
+	app.get("*.png", function (req, res) {
+    console.log(Object.keys(req))
+    console.log(req.path)
+		res.sendFile(path.join(DIST_DIR, req.path))
+	})
+
 	app.get("*", function (req, res) {
 		res.sendFile(path.join(PUBLIC_DIR, "index.html"))
 	})

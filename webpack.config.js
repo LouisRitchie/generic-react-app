@@ -1,17 +1,24 @@
 const path = require('path');
 const projectClientPath = path.join(__dirname, 'src')
+const webpack = require('webpack')
 
 module.exports = {
   entry: './src/entry.js',
+
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
+
   module: {
     rules: [
       {
         test: /\.svg$/,
         use: ['svg-react-loader']
+      },
+      {
+        test: /\.png$/,
+        use: ['file-loader', 'image-webpack-loader']
       },
       {
         test: /\.css$/,
@@ -44,15 +51,22 @@ module.exports = {
       }
     ]
   },
+
   resolve: {
     alias: {
       components: path.join(projectClientPath, 'components'),
       containers: path.join(projectClientPath, 'containers'),
       static: path.join(projectClientPath, 'static'),
-      lib: path.join(__dirname, 'lib'),
+      lib: path.join(projectClientPath, 'lib'),
       src: projectClientPath,
       styles: path.join(projectClientPath, 'styles')
     },
     extensions: ['.js', '.jsx']
-  }
+  },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      __APP_CONFIG__: JSON.stringify(require('./config.json'))
+    })
+  ]
 }
