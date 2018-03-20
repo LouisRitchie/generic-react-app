@@ -34,11 +34,10 @@ export const animationFrame$ = of(void 0, Scheduler.animationFrame).pipe(take(1)
 
 export const scroll$ = merge(
   fromEvent(window, 'scroll', passiveOpts),
-  fromEvent(window, 'wheel', passiveOpts),
   fromEvent(window, 'touchmove', passiveOpts).pipe(debounceTime(100)),
   fromEvent(window, 'touchend', passiveOpts).pipe(
     switchMap(() =>
-      timer(0, 500, 1000, Scheduler.animationFrame).pipe(take(15))
+      timer(0, 500, Scheduler.animationFrame).pipe(take(15))
     )
   )
 ).pipe(share())

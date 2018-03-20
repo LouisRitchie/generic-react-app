@@ -1,54 +1,43 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { scroll$ } from 'lib/observables.js'
 import { interval } from 'rxjs/observable/interval'
 import 'rxjs/add/operator/sample'
-import 'rxjs/add/operator/bufferTime'
-import 'rxjs/add/operator/filter'
 import './styles.css'
 
-import Photo from 'static/leanpub.png'
-
-const lowerLimit = 100
-const upperLimit = 200
-const picturePosEnd = 500
-const picturePosStart = 700
-
 class SlidingPhoto extends Component {
+  /*  the initial state has the image at zero opacity and at start position, so that
+   *  even if image is 1st on page, it will still slide in to view
+   */
   state = {
-    coefficient: 0,
-    currentY: (this.props.index + 1) * document.documentElement.clientHeight,
-    minY: (this.props.index + 0.5) * document.documentElement.clientHeight,
-    maxY: (this.props.index + 1) * document.documentElement.clientHeight
+    coefficient: 1
   }
 
   componentWillMount() {
-    const positionInterval$ = interval(20)
+    // set up the scroll position observable, which shall emit the latest scroll position every 100ms.
+    const pollScrollPosition$ = scroll$.sample(interval(100))
 
-    scroll$.sample(positionInterval$).bufferTime(200).filter(arr => arr.length > 6).subscribe(scrolls => {
-      const avg = scrolls.reduce((sum, {pageY}) => sum + pageY, 0) / scrolls.length + document.documentElement.clientHeight
-      const coefficient = this._getCoefficient(avg)
-      //console.log(scroll.pageY, this._getCoefficient(scroll.pageY))
+    pollScrollPosition$.subscribe(scroll => (
       this.setState({
-        coefficient,
-        currentY: this.state.minY + (coefficient * 500)
+        coefficient: this._getCoefficient(scroll.pageY + document.documentElement.clientHeight)
       })
-    })
+    ))
   }
 
-/*
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.y === void 0 || this.state.y === nextState.y) {
-      return false
-    }
-
-    return true
+  componentDidMount() {
+    this.setState({ coefficient: this._getCoefficient(document.documentElement.clientHeight) })
   }
-*/
+
+  componentWillUnmount() {
+    // unsubscribe from the observable, to avoid memory leaks.
+    pollScrollPosition$.unsubscribe()
+  }
 
   _getCoefficient = pageY => {
-    let coefficient = (this.state.maxY - pageY) / (this.state.maxY - this.state.minY)
-    console.log(coefficient)
+    /*  coefficient === 0: image at full opacity and resting at final position
+     *  0 < coefficient < 1: image is transitioning
+     *  coefficient === 1: image at zero opacity and resting at start position.
+     */
+    let coefficient = (this.props.slideTo + this.props.slideDistance - pageY) / this.props.slideDistance
     
     if (coefficient < 0) {
       return 0
@@ -62,9 +51,8 @@ class SlidingPhoto extends Component {
   }
 
   render() {
-    console.log('rending with ', this.state.currentY, this.state.coefficient)
     return (
-      <img className='photo' src={Photo} style={{top: this.state.currentY, opacity: 1 - this.state.coefficient}} />
+      <img className='photo' src={this.props.image} style={{top: this.props.slideTo + (this.state.coefficient * 500), opacity: 1 - this.state.coefficient}} />
     )
   }
 }
