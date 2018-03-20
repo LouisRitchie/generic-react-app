@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { scroll$ } from 'lib/observables.js'
 import { interval } from 'rxjs/observable/interval'
+import { take } from 'rxjs/operators/take'
+import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/sample'
+import 'rxjs/add/operator/takeUntil'
 import './styles.css'
 
 class SlidingPhoto extends Component {
@@ -14,9 +17,11 @@ class SlidingPhoto extends Component {
 
   componentWillMount() {
     // set up the scroll position observable, which shall emit the latest scroll position every 100ms.
-    const pollScrollPosition$ = scroll$.sample(interval(100))
+    this._unmount$ = (new Subject).pipe(take(1))
+    this._pollScrollPosition$ = scroll$.sample(interval(100)).takeUntil(this._unmount$)
 
-    pollScrollPosition$.subscribe(scroll => (
+    // subscribe to the observable, so that emitted events are passed to our coefficient function.
+    this._pollScrollPosition$.subscribe(scroll => (
       this.setState({
         coefficient: this._getCoefficient(scroll.pageY + document.documentElement.clientHeight)
       })
@@ -29,7 +34,7 @@ class SlidingPhoto extends Component {
 
   componentWillUnmount() {
     // unsubscribe from the observable, to avoid memory leaks.
-    pollScrollPosition$.unsubscribe()
+    this._unmount$.next()
   }
 
   _getCoefficient = pageY => {
