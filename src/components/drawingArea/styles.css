@@ -1,4 +1,10 @@
 .drawingArea {
   height: 100%;
   width: 100%;
+  position: relative;
+}
+
+.drawing {
+  position: absolute;
+  border: 1px solid black;
 }

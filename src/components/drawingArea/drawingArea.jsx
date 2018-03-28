@@ -9,12 +9,60 @@ import './styles.css'
 import './styles.css'
 
 class Footer extends Component {
-  
+  state = {
+    dragging: false,
+    startXY: [0, 0],
+    lastXY: [0, 0]
+  }
+
+  componentDidMount() {
+    this.refs.drawarea.addEventListener('mousemove', event => {
+      if (!this.state.dragging) {
+        return
+      }
+
+      this.setState({ lastXY: [event.x, event.y] })
+    })
+
+    this.refs.drawarea.addEventListener('mousedown', event => {
+      this.setState({ dragging: true, startXY: [event.x, event.y], lastXY: [event.x, event.y] })
+    })
+
+    this.refs.drawarea.addEventListener('mouseup', event => {
+      this.setState({ dragging: false,  })
+    })
+  }
+
+  getTLHW = (startXY, lastXY) => {
+    let result = [] // [top, left, height, width]
+
+    if (startXY[0] > lastXY[0]) {
+      result[1] = lastXY[0]
+      result[3] = startXY[0] - lastXY[0]
+    } else {
+      result[1] = startXY[0]
+      result[3] = lastXY[0] - startXY[0]
+    }
+
+    if (startXY[1] > lastXY[1]) {
+      result[0] = lastXY[1]
+      result[2] = startXY[1] - lastXY[1]
+    } else {
+      result[0] = startXY[1]
+      result[2] = lastXY[1] - startXY[1]
+    }
+
+    return { top: result[0], left: result[1], height: result[2], width: result[3] }
+  }
 
   render() {
+    const { dragging, lastXY, startXY } = this.state
+
+    const style = this.getTLHW(startXY, lastXY)
+
     return (
-      <div className="drawingArea">
-        Draw
+      <div ref='drawarea' onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className='drawingArea'>
+        <div style={style} className='drawing' />
       </div>
     )
   }
