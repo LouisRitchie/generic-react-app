@@ -11,8 +11,12 @@ import './styles.css'
 class Footer extends Component {
   state = {
     dragging: false,
-    startXY: [0, 0],
-    lastXY: [0, 0]
+    coords: [
+      {
+        startXY: [0, 0],
+        lastXY: [0, 0]
+      }
+    ]
   }
 
   componentDidMount() {
@@ -21,15 +25,36 @@ class Footer extends Component {
         return
       }
 
-      this.setState({ lastXY: [event.x, event.y] })
+      this.setState({
+        coords: [
+          {
+            startXY: this.state.coords[0].startXY,
+            lastXY: [event.x, event.y]
+          },
+          ...this.state.coords
+        ]
+      })
     })
 
     this.refs.drawarea.addEventListener('mousedown', event => {
-      this.setState({ dragging: true, startXY: [event.x, event.y], lastXY: [event.x, event.y] })
+      this.setState({
+        dragging: true,
+        coords: [
+          {
+            startXY: [event.x, event.y],
+            lastXY: [event.x, event.y]
+          },
+          {
+            startXY: [event.x, event.y],
+            lastXY: [event.x, event.y]
+          },
+          ...this.state.coords
+        ]
+      })
     })
 
     this.refs.drawarea.addEventListener('mouseup', event => {
-      this.setState({ dragging: false,  })
+      this.setState({ dragging: false })
     })
   }
 
@@ -56,13 +81,14 @@ class Footer extends Component {
   }
 
   render() {
-    const { dragging, lastXY, startXY } = this.state
-
-    const style = this.getTLHW(startXY, lastXY)
+    const { dragging } = this.state
+    const { startXY, lastXY } = this.state.coords[0]
 
     return (
       <div ref='drawarea' onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className='drawingArea'>
-        <div style={style} className='drawing' />
+        {this.state.coords.map(({startXY, lastXY}) => (
+          <div style={this.getTLHW(startXY, lastXY)} className='drawing' />
+        ))}
       </div>
     )
   }
