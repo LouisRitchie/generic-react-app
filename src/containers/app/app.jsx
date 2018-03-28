@@ -1,44 +1,19 @@
 import React, { Component } from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
-import Header from 'components/header'
-import Footer from 'components/footer'
 import routes from 'src/routes.js'
-import TransitionContainer from 'containers/transitionContainer'
+import DrawingArea from 'components/drawingArea'
 import './styles.css'
 
 class App extends Component {
-  state = {
-    lightsOn: false // when lights off, opacity is 0.
-  }
-
-  _hitLightSwitch = () => this.setState({ lightsOn: !this.state.lightsOn })
-
   render() {
-    const { lightsOn } = this.state
-
     return (
       <div className="app">
-        <Header />
 
-        <div className={`container ${lightsOn ? 'lightsOn' : ''}`}>
-          <Switch>
-            {routes.map(({component, name, path}) => (
-              <Route
-                path={path}
-                render={() => (
-                  <TransitionContainer
-                    hitLightSwitch={this._hitLightSwitch}
-                    component={component}
-                    routeName={name}
-                  />
-                )}
-              />
-            ))}
-            <Redirect from='/*' to='/' />
-          </Switch>
-        </div>
+        <Switch>
+          <Route path='/' component={DrawingArea} />
+          <Redirect from='/*' to='/' />
+        </Switch>
 
-        <Footer />
       </div>
     )
   }

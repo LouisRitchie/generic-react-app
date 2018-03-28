@@ -5,6 +5,8 @@ const webpack = require('webpack')
 module.exports = {
   entry: './src/entry.js',
 
+  mode: 'development',
+
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
