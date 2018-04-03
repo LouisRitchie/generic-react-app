@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
+import { scroll$ } from 'lib/observables.js'
+import { Observable } from 'rxjs'
 import { interval } from 'rxjs/observable/interval'
-import { take } from 'rxjs/operators/take'
+import { map, take, takeUntil, sample } from 'rxjs/operators'
+import 'rxjs/add/operator/sample'
 import { Subject } from 'rxjs/Subject'
+/*
 import 'rxjs/add/operator/sample'
 import 'rxjs/add/operator/takeUntil'
+*/
 import './styles.css'
 
 import './styles.css'
@@ -19,24 +24,36 @@ class Footer extends Component {
     ]
   }
 
+  subscribeToStuff = event => {
+
+  }
+
   componentDidMount() {
-    this.refs.drawarea.addEventListener('mousemove', event => {
-      if (!this.state.dragging) {
-        return
+    this._unmount$ = (new Subject()).pipe(take(1))
+    this._mouseMove$ = Observable.fromEvent(this.refs.drawarea, 'mousemove').pipe(takeUntil(this._unmount$))
+    this._mouseDown$ = Observable.fromEvent(this.refs.drawarea, 'mousedown').pipe(takeUntil(this._unmount$))
+    this._mouseUp$ = Observable.fromEvent(this.refs.drawarea, 'mouseup').pipe(takeUntil(this._unmount$))
+
+    this._mouseMove$.subscribe(
+      event => {
+        if (!this.state.dragging) {
+          return
+        }
+
+        this.setState({
+          coords: [
+            {
+              startXY: this.state.coords[0].startXY,
+              lastXY: [event.x, event.y]
+            },
+            ...this.state.coords.split(0, 100)
+          ]
+        })
       }
+    )
+    console.log('hello')
 
-      this.setState({
-        coords: [
-          {
-            startXY: this.state.coords[0].startXY,
-            lastXY: [event.x, event.y]
-          },
-          ...this.state.coords
-        ]
-      })
-    })
-
-    this.refs.drawarea.addEventListener('mousedown', event => {
+    this._mouseDown$.subscribe(event => {
       this.setState({
         dragging: true,
         coords: [
@@ -48,14 +65,15 @@ class Footer extends Component {
             startXY: [event.x, event.y],
             lastXY: [event.x, event.y]
           },
-          ...this.state.coords
+          ...this.state.coords.split(0, 100)
         ]
       })
     })
 
-    this.refs.drawarea.addEventListener('mouseup', event => {
+    this._mouseUp$.subscribe(event => {
       this.setState({ dragging: false })
     })
+
   }
 
   getTLHW = (startXY, lastXY) => {
