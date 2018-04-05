@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import './styles.css'
 
-class RectangularArea extends Component {
+class Toolbox extends Component {
   render() {
     return (
       <div>
-        Im a RectangularArea
+        Im a Toolbox
       </div>
     )
   }
 }
 
-export default RectangularArea
+export default Toolbox

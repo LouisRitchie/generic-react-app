@@ -1,22 +1,13 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import routes from 'src/routes.js'
 import './styles.css'
 
 class Header extends Component {
   render() {
     return (
-      <div className="header">
-        <h1 className="title">Generic App</h1>
-        <div className="nav">
-          {routes.slice(0).reverse().map(route => (
-            <Link
-              to={route.path}
-              className={`navItem ${window.location.pathname === route.path ? 'selected' : ''}`}>
-              {route.name}
-            </Link>
-          ))}
-        </div>
+      <div className="headerWrapper">
+        <h1>React WYSIWYG</h1>
+        <h2>Louis Ritchie</h2>
+        <h3>View Source (coming soon)</h3>
       </div>
     )
   }

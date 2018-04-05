@@ -1,20 +1,12 @@
 import React, { Component } from 'react'
-import { append, concat, head, pipe, slice } from 'ramda'
-import { scroll$ } from 'lib/observables.js'
+import { append, concat, head, slice } from 'ramda'
 import { Observable } from 'rxjs'
-import { interval } from 'rxjs/observable/interval'
-import { map, take, takeUntil, sample } from 'rxjs/operators'
-import 'rxjs/add/operator/sample'
+import { map, take, takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs/Subject'
-/*
-import 'rxjs/add/operator/sample'
-import 'rxjs/add/operator/takeUntil'
-*/
 import './styles.css'
 
-class Footer extends Component {
+class Grid extends Component {
   state = {
-    dragging: false,
     coords: [ [0, 0], [0, 0] ]
   }
 
@@ -31,10 +23,6 @@ class Footer extends Component {
 
     this._dragStart$.subscribe(
       ({x, y}) => {
-        if (!this.state.dragging) {
-          return
-        }
-
         this.setState({
           coords: append([x, y], slice(-20, 21, this.state.coords))
         })
@@ -43,7 +31,6 @@ class Footer extends Component {
 
     this._dragEnd$.subscribe(({x, y}) => {
       this.setState({
-        dragging: true,
         coords: concat([[x, y], [x, y]], slice(-20, 21, this.state.coords))
       })
     })
@@ -75,11 +62,11 @@ class Footer extends Component {
     return (
       <div ref='drawarea' onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className='gridWrapper'>
         {this.state.coords.slice(1).map((currentCoords, i , coords) => (
-          <div style={this.getTLHW(currentCoords, coords[i])} className='drawing' />
+          <div key={i} style={this.getTLHW(currentCoords, coords[i])} className='drawing' />
         ))}
       </div>
     )
   }
 }
 
-export default Footer
+export default Grid
