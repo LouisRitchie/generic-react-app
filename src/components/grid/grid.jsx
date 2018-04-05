@@ -50,7 +50,6 @@ class Footer extends Component {
   }
 
   getTLHW = (currentCoords, prevCoords) => {
-    console.log(currentCoords, prevCoords)
     let result = [] // [top, left, height, width]
 
     if (currentCoords[0] > prevCoords[0]) {
@@ -68,14 +67,13 @@ class Footer extends Component {
       result[0] = currentCoords[1]
       result[2] = prevCoords[1] - currentCoords[1]
     }
-    console.log(result)
 
     return { top: result[0], left: result[1], height: result[2], width: result[3] }
   }
 
   render() {
     return (
-      <div ref='drawarea' onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className='drawingArea'>
+      <div ref='drawarea' onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className='gridWrapper'>
         {this.state.coords.slice(1).map((currentCoords, i , coords) => (
           <div style={this.getTLHW(currentCoords, coords[i])} className='drawing' />
         ))}

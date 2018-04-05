@@ -12,7 +12,7 @@ import 'rxjs/add/operator/takeUntil'
 */
 import './styles.css'
 
-class Footer extends Component {
+class RectangularArea extends Component {
   state = {
     dragging: false,
     coords: [ [0, 0], [0, 0] ]
@@ -84,4 +84,4 @@ class Footer extends Component {
   }
 }
 
-export default Footer
+export default RectangularArea

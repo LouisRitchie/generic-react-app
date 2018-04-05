@@ -1,6 +1,0 @@
-{
-  "main": "./drawingArea.jsx",
-  "dependencies": {
-    "ramda": "^0.25.0"
-  }
-}
